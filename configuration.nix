@@ -13,34 +13,10 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot";
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
-  security.pam = {
- 	enableEcryptfs = true;
-	services = {
-		login.makeHomeDir = true;
-		sshd.makeHomeDir = true;
-		sddm.makeHomeDir = true;
-		sddm.unixAuth = false;
-	}; 
-  };
-
-networking.hostName = "MKL-WS1"; # Define your hostname.
-networking.nameservers = ["10.42.150.102"];
-
-services.samba = {
-    enable = true;
-    securityType = "ads";
-    extraConfig = 
-''
- realm = ATELIER.LOCAL
- workgroup = ATELIER
- #log file = /var/log/samba/%m.log
- kerberos method = secrets and keytab
- client signing = yes
- client use spnego = yes
-'';
- };
+  networking.hostName = "MKL-WS1"; # Define your hostname.
+  networking.nameservers = ["10.42.150.102"];
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -157,67 +133,6 @@ services.samba = {
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-krb5.enable = true;
-krb5.libdefaults.default_realm = "ATELIER.LOCAL";
-security.pam.services.systemd-user.makeHomeDir = true;
-
-#krb5 = {
-#  enable = true;
-#  defaultRealm = "NAS.ATELIER.LOCAL";
-#};
-
-
-#krb5.realms = {
-#  "NAS.ATELIER.LOCAL" = {
-#    admin_server = "nas.atelier.local";
-#    kdc = [
-#      "nas.atelier.local"
-#    ];
-#  };
-#};
-
-  services.sssd.enable = true;
-  
-  # Setup sssd config file
-  services.sssd.config = 
-  ''
-[sssd]
-config_file_version = 2
-services = nss, pam
-domains = ATELIER.LOCAL
-reconnection_retries = 3
-
-[nss]
-reconnection_retries = 3
-
-[pam]
-reconnection_retries = 3
-
-[domain/ATELIER.LOCAL]
-debug_level = 6
-enumerate = true
-auth_provider = ldap
-ldap_search_base = dc=atelier, dc=local
-ldap_uri = ldap://nas.atelier.local/
-krb5_realm = ATELIER.LOCAL
-default_shell=/bin/sh
-ad_server = nas.atelier.local
-krb5_store_password_if_offline = True
-cache_credentials = True
-krb5_realm = ATELIER.LOCAL
-id_provider = ad
-fallback_homedir = /home/%u@%d
-ad_domain = atelier.local
-use_fully_qualified_names = True
-ldap_id_mapping = True
-access_provider = ad
-ad_gpo_ignore_unreadable = True
-ad_gpo_access_control = permissive
-ldap_default_authtok_type = password
-ldap_default_authtok = RedactedSSSDPassword
-ldap_default_bind_dn = dc=atelier,dc=local
-'';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
