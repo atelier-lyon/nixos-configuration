@@ -13,7 +13,7 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot.loader.efi.efiSysMountPoint = "/boot";
 
   security.pam = {
  	enableEcryptfs = true;
@@ -123,6 +123,8 @@ services.samba = {
       nss_ldap
       pam_ldap
       getent
+      arduino
+      vim
     #  thunderbird
     ];
   };
